@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="anchor">assets/images/ic_menu_anchor.png</file>
+        <file alias="barcode.png">assets/images/ic_menu_barcode.png</file>
+        <file>assets/images/ic_menu_business.png</file>
+        <file>assets/images/ic_menu_car.png</file>
+        <file>assets/images/ic_menu_cards.png</file>
+    </qresource>
+</RCC>
