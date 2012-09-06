@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef IMAGEVIEWER_H
+#define IMAGEVIEWER_H
 
 #include <QMainWindow>
 #include <QScrollBar>
@@ -10,18 +10,20 @@
 #include <QToolBar>
 #include <QScrollArea>
 #include "HistogramWidget.h"
+#include "ImageViewer.h"
 
 namespace Ui {
-class MainWindow;
+class ImageViewer;
 }
 
-class MainWindow : public QMainWindow
+class ImageViewer : public QMainWindow
 {
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit ImageViewer(QWidget *parent = 0);
+    ImageViewer(QImage original_image, QWidget *parent = 0);
+    ~ImageViewer();
 
 private slots:
     void open();
@@ -29,9 +31,12 @@ private slots:
     void zoomIn();
     void zoomOut();
     void viewHistogram();
+    void otsu();
     
 private:
-    Ui::MainWindow *ui;
+    Ui::ImageViewer *ui;
+
+    void initialize();
     void createActions();
     void createMenus();
     void createToolbars();
@@ -48,13 +53,15 @@ private:
     QAction *open_action;
     QAction *save_action;
     QAction *exit_action;
+
     QAction *zoom_in_action;
     QAction *zoom_out_action;
     QAction* view_histogram_action;
+    QAction* otsu_action;
 
     QMenu *file_menu;
     QToolBar *image_toolbar;
 
 };
 
-#endif // MAINWINDOW_H
+#endif // IMAGEVIEWER_H

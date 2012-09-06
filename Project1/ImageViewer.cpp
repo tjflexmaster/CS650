@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "ImageViewer.h"
+#include "ui_ImageViewer.h"
 #include <QLabel>
 #include <QAction>
 #include <QPalette>
@@ -9,13 +9,49 @@
 #include <QScrollBar>
 #include "HistogramWidget.h"
 #include "Histogram.h"
+#include <QWidget>
+#include "Otsu.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+ImageViewer::ImageViewer(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::ImageViewer)
 {
     ui->setupUi(this);
 
+    initialize();
+
+    resize(500,400);
+}
+
+ImageViewer::ImageViewer(QImage original_image, QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::ImageViewer)
+{
+    ui->setupUi(this);
+
+    initialize();
+
+    if (original_image.isNull()) {
+        QMessageBox::information(this, tr("Computer Graphics"), tr("Original Image is Null"));
+        return;
+    }
+    image = original_image;
+    image_label->setPixmap(QPixmap::fromImage(image));
+    scale_factor = 1.0;
+
+    resize(image.size());
+
+    updateActions();
+}
+
+ImageViewer::~ImageViewer()
+{
+    delete ui;
+    delete histogram;
+}
+
+void ImageViewer::initialize()
+{
     image_toolbar = ui->mainToolBar;
 
     image_label = new QLabel;
@@ -31,17 +67,9 @@ MainWindow::MainWindow(QWidget *parent) :
     createToolbars();
 
     setWindowTitle(tr("Computer Vision"));
-    resize(500, 400);
-
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-    delete histogram;
-}
-
-void MainWindow::createMenus()
+void ImageViewer::createMenus()
 {
     file_menu = menuBar()->addMenu(tr("&File"));
     file_menu->addAction(open_action);
@@ -50,15 +78,16 @@ void MainWindow::createMenus()
     file_menu->addAction(exit_action);
 }
 
-void MainWindow::createToolbars()
+void ImageViewer::createToolbars()
 {
     image_toolbar->addAction(zoom_in_action);
     image_toolbar->addAction(zoom_out_action);
     image_toolbar->addSeparator();
     image_toolbar->addAction(view_histogram_action);
+    image_toolbar->addAction(otsu_action);
 }
 
-void MainWindow::createActions()
+void ImageViewer::createActions()
 {
     open_action = new QAction(tr("&Open..."), this);
     open_action->setShortcut(tr("Ctrl+O"));
@@ -85,9 +114,12 @@ void MainWindow::createActions()
     view_histogram_action = new QAction(tr("View &Histogram"), this);
     view_histogram_action->setIcon(QIcon(":/barcode.png"));
     connect(view_histogram_action, SIGNAL(triggered()), this, SLOT(viewHistogram()));
+
+    otsu_action = new QAction(tr("Otsu &Threshold"), this);
+    connect(otsu_action, SIGNAL(triggered()), this, SLOT(otsu()));
 }
 
-void MainWindow::open()
+void ImageViewer::open()
 {
     QString file_name = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
     if ( !file_name.isEmpty() ) {
@@ -104,7 +136,7 @@ void MainWindow::open()
     }
 }
 
-void MainWindow::save()
+void ImageViewer::save()
 {
     QString file_name = QFileDialog::getSaveFileName(this, tr("Save Image"), QDir::currentPath(), tr("Images (*.ppm *.pgm)"));
     if ( !file_name.isEmpty() ) {
@@ -114,31 +146,41 @@ void MainWindow::save()
     }
 }
 
-void MainWindow::zoomIn()
+void ImageViewer::zoomIn()
 {
     scaleImage(.25);
 }
 
-void MainWindow::zoomOut()
+void ImageViewer::zoomOut()
 {
     scaleImage(-.25);
 }
 
-void MainWindow::viewHistogram()
+void ImageViewer::viewHistogram()
 {
     Histogram hist(&image);
     histogram = new HistogramWidget(hist, 0);
     histogram->show();
 }
 
-void MainWindow::updateActions()
+void ImageViewer::otsu()
+{
+    Otsu otsu;
+
+    ImageViewer* viewer = new ImageViewer(otsu.processImage(&image), 0);
+    viewer->setWindowTitle("Otsu Threshold");
+    viewer->show();
+}
+
+
+void ImageViewer::updateActions()
 {
     zoom_in_action->setEnabled(scale_factor < 3.0);
     zoom_out_action->setEnabled(scale_factor > 0.333);
     save_action->setEnabled(!image_label->pixmap()->isNull());
 }
 
-void MainWindow::scaleImage(double factor)
+void ImageViewer::scaleImage(double factor)
 {
     Q_ASSERT(!image.isNull());
     scale_factor += factor;
@@ -149,9 +191,3 @@ void MainWindow::scaleImage(double factor)
     zoom_in_action->setEnabled(scale_factor < 3.0);
     zoom_out_action->setEnabled(scale_factor > 0.333);
 }
-
-//void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
-//{
-//    scrollBar->setValue(int(factor * scrollBar->value()
-//                         + ((factor - 1) * scrollBar->pageStep()/2)));
-//}

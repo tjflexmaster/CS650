@@ -15,10 +15,13 @@ public:
     QMap<int, int>::iterator begin();
     QMap<int, int>::iterator end();
     int getMaxValue();
+    int getPixelCount();
+    int getValue(int t);
 private:
     void initialize();
     QMap<int, int> _histogram;
     int _max;
+    int _pixel_count;
 
 };
 

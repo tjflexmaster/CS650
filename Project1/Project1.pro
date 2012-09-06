@@ -10,12 +10,14 @@ TARGET = Project1
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    ImageViewer.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    ImageViewer.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    ImageViewer.ui
 
 RESOURCES += \
     assets.qrc
@@ -28,3 +30,11 @@ else:unix: LIBS += -L$$OUT_PWD/../Histogram/ -lHistogram
 
 INCLUDEPATH += $$PWD/../Histogram
 DEPENDPATH += $$PWD/../Histogram
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Otsu/release/ -lOtsu
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Otsu/debug/ -lOtsu
+else:symbian: LIBS += -lOtsu
+else:unix: LIBS += -L$$OUT_PWD/../Otsu/ -lOtsu
+
+INCLUDEPATH += $$PWD/../Otsu
+DEPENDPATH += $$PWD/../Otsu
