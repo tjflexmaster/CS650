@@ -1,0 +1,12 @@
+#ifndef GRAPHCUT_GLOBAL_H
+#define GRAPHCUT_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(GRAPHCUT_LIBRARY)
+#  define GRAPHCUTSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define GRAPHCUTSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // GRAPHCUT_GLOBAL_H

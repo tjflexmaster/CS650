@@ -3,4 +3,8 @@ TEMPLATE = subdirs
 SUBDIRS += \
     Project1 \
     Histogram \
-    Otsu
+    Otsu \
+    AdvancedOperations \
+    MaxFlowTest \
+    AnomolyDetection \
+    VideoPlayerExample

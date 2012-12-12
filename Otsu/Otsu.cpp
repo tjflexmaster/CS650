@@ -64,18 +64,18 @@ int Otsu::calculateThreshold(Histogram* histogram)
 
         qreal between_variance = weight1 * weight2 * qPow((mean1 - mean2), 2);
 
-        qDebug() << "Pixel Count: " << pixel_count;
-        qDebug() << "BG_count: " << bg_count;
-        qDebug() << "FG_count: " << fg_count;
-        qDebug() << "Total PC: " << total_pixel_count;
-        qDebug() << "Weight1: " << weight1;
-        qDebug() << "Weight2: " << weight2;
-        qDebug() << "Total CP: " << total_prob;
-        qDebug() << "BG_prob: " << bg_prob;
-        qDebug() << "FG_prob: " << fg_prob;
-        qDebug() << "Mean1: " << mean1;
-        qDebug() << "Mean2: " << mean2;
-        qDebug() << "Between: " << between_variance;
+//        qDebug() << "Pixel Count: " << pixel_count;
+//        qDebug() << "BG_count: " << bg_count;
+//        qDebug() << "FG_count: " << fg_count;
+//        qDebug() << "Total PC: " << total_pixel_count;
+//        qDebug() << "Weight1: " << weight1;
+//        qDebug() << "Weight2: " << weight2;
+//        qDebug() << "Total CP: " << total_prob;
+//        qDebug() << "BG_prob: " << bg_prob;
+//        qDebug() << "FG_prob: " << fg_prob;
+//        qDebug() << "Mean1: " << mean1;
+//        qDebug() << "Mean2: " << mean2;
+//        qDebug() << "Between: " << between_variance;
 
         if ( between_variance > max_between_variance ) {
             threshold = t;

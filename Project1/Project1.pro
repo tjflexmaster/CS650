@@ -11,10 +11,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    ImageViewer.cpp
+    ImageViewer.cpp \
+    ImageDisplay.cpp \
+    ImageItem.cpp
 
 HEADERS  += \
-    ImageViewer.h
+    ImageViewer.h \
+    ImageDisplay.h \
+    ImageItem.h
 
 FORMS    += \
     ImageViewer.ui
@@ -38,3 +42,11 @@ else:unix: LIBS += -L$$OUT_PWD/../Otsu/ -lOtsu
 
 INCLUDEPATH += $$PWD/../Otsu
 DEPENDPATH += $$PWD/../Otsu
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../AdvancedOperations/release/ -lAdvancedOperations
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../AdvancedOperations/debug/ -lAdvancedOperations
+else:symbian: LIBS += -lAdvancedOperations
+else:unix: LIBS += -L$$OUT_PWD/../AdvancedOperations/ -lAdvancedOperations
+
+INCLUDEPATH += $$PWD/../AdvancedOperations
+DEPENDPATH += $$PWD/../AdvancedOperations
